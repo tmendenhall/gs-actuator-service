@@ -1,12 +1,13 @@
 package hello;
 
-import java.util.concurrent.atomic.AtomicLong;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping("/hello-world")
@@ -16,8 +17,9 @@ public class HelloWorldController {
     private final AtomicLong counter = new AtomicLong();
 
     @RequestMapping(method=RequestMethod.GET)
-    public @ResponseBody Greeting sayHello(@RequestParam(value="name", required=false, defaultValue="Stranger") String name) {
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    public ResponseEntity<?> sayHello(@RequestParam(value="name", required=false, defaultValue="Stranger") String name) {
+        Greeting greeting = new Greeting(counter.incrementAndGet(), String.format(template,name));
+        return new ResponseEntity<Greeting>(greeting, HttpStatus.OK);
     }
 
 }
